@@ -1,5 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
+import { Button } from 'antd';
+
+
 
 function App() {
   const handleOrder = () => {
@@ -7,6 +10,7 @@ function App() {
     const data = {
       pizzaType: "pepperoni",
       size: "medium",
+      customer: "Jason"
     };
 
     fetch("http://localhost:8080/orderReceived", {
@@ -24,7 +28,8 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={handleOrder}>Click to Order Pizza</button>
+      <Button type="primary" onClick={handleOrder}>Click to Order Pizza</Button>
+      <Button type="primary" onClick={handleOrder}>Second Button</Button>
     </div>
   );
 }
