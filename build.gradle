@@ -47,12 +47,13 @@ task npmBuild(type: NpmTask) {
 }
 
 task copyReactBuild(type: Copy) {
-	dependsOn npmBuild
+	// dependsOn npmBuild
     from "${project.projectDir}/front-end/order-fe/build"
     into "${project.projectDir}/src/main/resources/static"
 }
 
-
+processResources.dependsOn copyReactBuild
+build.dependsOn copyReactBuild
 // build.dependsOn npmBuild
 
 // bootRun.dependsOn copyReactBuild
