@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={handleOrder}>Order Pizza</button>
+      <button onClick={handleOrder}>Click to Order Pizza</button>
     </div>
   );
 }

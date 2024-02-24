@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+path-to-your-react-app/**
 
 ### STS ###
 .apt_generated
