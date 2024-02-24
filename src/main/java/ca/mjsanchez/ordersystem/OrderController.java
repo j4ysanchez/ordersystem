@@ -45,7 +45,7 @@ public class OrderController {
 
         producer.close();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Order Received");
+        return ResponseEntity.status(HttpStatus.CREATED).body("{data: 'Order Received'}");
 
     }
 
