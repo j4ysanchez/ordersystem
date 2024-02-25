@@ -6,17 +6,27 @@ import com.google.gson.Gson;
 
 public class OrderCreatedEvent {
 
-    private static final AtomicInteger count = new AtomicInteger(0); 
+    private static final AtomicInteger count = new AtomicInteger(0);
     private int id;
     private String customer;
     private String pizzaType;
     private String size;
+    private String address;
 
-    public OrderCreatedEvent(String customer, String pizzaType, String size) {
+    public OrderCreatedEvent(String customer, String pizzaType, String size, String address) {
         this.id = count.incrementAndGet();
         this.customer = customer;
         this.pizzaType = pizzaType;
         this.size = size;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String customerAddress) {
+        this.address = customerAddress;
     }
 
     public int getId() {

@@ -24,6 +24,7 @@ public class OrderController {
         String customer = order.getCustomer();
         String pizzaType = order.getPizzaType();
         String size = order.getSize();
+        String address = order.getAddress();
 
         System.out.println("POST Order received: " + customer + " " + pizzaType + " " + size);
 
@@ -35,7 +36,7 @@ public class OrderController {
         // Create the Kafka producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(customer, pizzaType, size);
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(customer, pizzaType, size, address);
 
         Gson gson = new Gson();
         String json = gson.toJson(orderCreatedEvent);
@@ -53,7 +54,8 @@ public class OrderController {
     public OrderCreatedEvent orderReceived(
             @RequestParam(name = "customer", defaultValue = "John Doe") String customer,
             @RequestParam(name = "pizzaType", defaultValue = "Pepperoni") String pizzaType,
-            @RequestParam(name = "size", defaultValue = "Medium") String size) {
+            @RequestParam(name = "size", defaultValue = "Medium") String size,
+            @RequestParam(name = "address", defaultValue = "123 Main St") String address) {
 
         System.out.println("Order received: " + customer + " " + pizzaType + " " + size);
 
@@ -65,7 +67,7 @@ public class OrderController {
         // Create the Kafka producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(customer, pizzaType, size);
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(customer, pizzaType, size, address);
 
         Gson gson = new Gson();
         String json = gson.toJson(orderCreatedEvent);
