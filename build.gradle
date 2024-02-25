@@ -52,8 +52,11 @@ task copyReactBuild(type: Copy) {
     into "${project.projectDir}/src/main/resources/static"
 }
 
+
 processResources.dependsOn copyReactBuild
 build.dependsOn copyReactBuild
+
+
 // build.dependsOn npmBuild
 
 // bootRun.dependsOn copyReactBuild

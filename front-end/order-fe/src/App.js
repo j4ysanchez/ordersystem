@@ -1,8 +1,39 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { Form, Input, Select, Radio, Button, Row, Col, Card } from 'antd';
-import React, { useState } from 'react';
 
+import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
+import React, { useState, useEffect } from 'react';
+import "./App.css";
+
+import PizzaToppingsDropdown from "./PizzaToppings";
+// import { PizzaSizeDropdown } from './PizzaSizes';
+
+// export function PizzaSizeDropdown(v) {
+//   const [pizzaSizes, setPizzaSizes] = useState([]);
+//   const [pizzaSize, setPizzaSize] = useState('');
+
+//   useEffect(() => {
+//     fetch('http://localhost:8080/pizza-sizes')
+//       .then(response => response.json())
+//       .then(data => setPizzaSizes(data))
+//       .catch(error => console.error('Error:', error));
+//   }, []);
+
+
+//   const handleChange = (newValue) => {
+//     console.log(newValue);
+//     console.log("v", v);
+//     console.log("onChange", v.onChange);
+//     setPizzaSize(newValue);
+
+//   ;}
+
+//   return (
+//     <Select placeholder="Select a pizza size" onChange={handleChange}>
+//       {Object.entries(pizzaSizes).map(([sizeKey, sizeValue]) => 
+//         <Select.Option key={sizeKey} value={sizeKey}>{sizeValue}</Select.Option>
+//       )}
+//     </Select>
+//   );
+// }
 
 
 function App() {
@@ -13,14 +44,36 @@ function App() {
   const [address, setAddress] = useState('');
   const [pizzaType, setPizzaType] = useState('');
   const [pizzaSize, setPizzaSize] = useState('');
+  const [pizzaSizes, setPizzaSizes] = useState([]);
 
-  const handleOrder = () => {
+  const [pizzaToppings, setPizzaToppings] = useState([]);
+
+  useEffect(() => {
+      fetch('http://localhost:8080/pizza-toppings')
+          .then(response => response.json())
+          .then(data => setPizzaToppings(data))
+          .catch(error => console.error('Error:', error));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/pizza-sizes')
+      .then(response => response.json())
+      .then(data => setPizzaSizes(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
+
+  const handleOrder = (values) => {
     const url = "http://localhost:8080/orderReceived";
+
+    console.log("values", values);
     const data = {
-      pizzaType: "pepperoni",
-      size: "medium",
-      customer: "Jason"
+      pizzaType: values.pizzaType,
+      size: values.pizzaSize,
+      customer: values.name,
+      address: values.address
     };
+
+    console.log(data);
 
     fetch("http://localhost:8080/orderReceived", {
       method: "POST",
@@ -50,20 +103,20 @@ function App() {
             <Form.Item name="address" rules={[{ required: true, message: 'Please input your address!' }]}>
               <Input placeholder="Address" />
             </Form.Item>
-            <Form.Item name="pizzaType" rules={[{ required: true, message: 'Please select a pizza type!' }]}>
-              <Select placeholder="Pizza Type">
-                <Option value="margherita">Margherita</Option>
-                <Option value="pepperoni">Pepperoni</Option>
-                <Option value="hawaiian">Hawaiian</Option>
-                {/* Add more options as needed */}
-              </Select>
+            <Form.Item name="pizzaType" rules={[{ required: false, message: 'Please select a pizza type!' }]}>
+            <Select placeholder="Select your toppings">
+          {Object.entries(pizzaToppings).map(([key, value]) => 
+              <option key={key} value={key}>{value}</option>
+          )}
+      </Select>
+
             </Form.Item>
-            <Form.Item name="pizzaSize" rules={[{ required: true, message: 'Please select a pizza size!' }]}>
-              <Radio.Group>
-                <Radio value="small">Small</Radio>
-                <Radio value="medium">Medium</Radio>
-                <Radio value="large">Large</Radio>
-              </Radio.Group>
+            <Form.Item name="pizzaSize" rules={[{ required: false, message: 'Please select a pizza size!' }]}>
+            <Select placeholder="Select a pizza size" >
+      {Object.entries(pizzaSizes).map(([sizeKey, sizeValue]) => 
+        <Select.Option key={sizeKey} value={sizeKey}>{sizeValue}</Select.Option>
+      )}
+    </Select>
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
