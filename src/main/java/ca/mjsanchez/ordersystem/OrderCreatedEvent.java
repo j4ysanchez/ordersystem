@@ -7,14 +7,15 @@ import com.google.gson.Gson;
 public class OrderCreatedEvent {
 
     private static final AtomicInteger count = new AtomicInteger(0);
-    private int id;
+    private String id;
     private String customer;
     private String pizzaType;
     private String size;
     private String address;
 
     public OrderCreatedEvent(String customer, String pizzaType, String size, String address) {
-        this.id = count.incrementAndGet();
+        // this.id = count.incrementAndGet();
+        this.id = String.valueOf(System.currentTimeMillis());
         this.customer = customer;
         this.pizzaType = pizzaType;
         this.size = size;
@@ -29,7 +30,7 @@ public class OrderCreatedEvent {
         this.address = customerAddress;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
