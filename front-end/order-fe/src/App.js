@@ -68,7 +68,7 @@ function App() {
     const data = {
       pizzaType: values.pizzaType,
       size: values.pizzaSize,
-      customer: values.name,
+      name: values.name,
       address: values.address,
     };
 

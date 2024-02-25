@@ -12,6 +12,11 @@ public class OrderCreatedEvent {
     private String pizzaType;
     private String size;
     private String address;
+    private String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
 
     public OrderCreatedEvent(String customer, String pizzaType, String size, String address) {
         // this.id = count.incrementAndGet();
@@ -20,6 +25,7 @@ public class OrderCreatedEvent {
         this.pizzaType = pizzaType;
         this.size = size;
         this.address = address;
+        this.timestamp = String.valueOf(System.currentTimeMillis());
     }
 
     public String getAddress() {
