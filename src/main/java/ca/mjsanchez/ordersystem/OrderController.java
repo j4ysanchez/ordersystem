@@ -42,12 +42,56 @@ public class OrderController {
         String json = gson.toJson(orderCreatedEvent);
 
         // publish the event to the "order-events" topic
-        producer.send(new ProducerRecord<String, String>("order-events", json));
+
+        // Create a unique id for a ProducerRecord key
+        String recordKey = String.valueOf(System.currentTimeMillis());
+        System.out.println("recordKey " + recordKey);
+
+        producer.send(new ProducerRecord<String, String>("order-events", recordKey, json));
 
         producer.close();
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{data: 'Order Received'}");
 
+    }
+
+    @GetMapping("/hello-event")
+    public void sendHelloEvent(@RequestParam String id) {
+
+        String template = "{ \"orderid\":\"%s\", \"data\":\"hello%s\"}";
+        String json = String.format(template, id, id);
+        Gson gson = new Gson();
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        // Create the Kafka producer
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+
+        producer.send(new ProducerRecord<String, String>("hello-log", "key" + id, json));
+
+        producer.close();
+    }
+
+    @GetMapping("/bye-event")
+    public void sendByeEvent(@RequestParam String id) {
+        String template = "{ \"orderid\":\"%s\", \"data\":\"bye%s\"}";
+        String json = String.format(template, id, id);
+        Gson gson = new Gson();
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        // Create the Kafka producer
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+
+        producer.send(new ProducerRecord<String, String>("bye-log", "key" + id, json));
+
+        producer.close();
     }
 
     @GetMapping("/orderReceived")
@@ -72,8 +116,12 @@ public class OrderController {
         Gson gson = new Gson();
         String json = gson.toJson(orderCreatedEvent);
 
+        // Create a unique id for a ProducerRecord key
+        String recordKey = String.valueOf(System.currentTimeMillis());
+        System.out.println("recordKey " + recordKey);
+
         // publish the event to the "order-events" topic
-        producer.send(new ProducerRecord<String, String>("order-events", json));
+        producer.send(new ProducerRecord<String, String>("order-events", recordKey, json));
 
         producer.close();
 
