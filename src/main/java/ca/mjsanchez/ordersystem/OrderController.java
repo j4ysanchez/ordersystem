@@ -1,9 +1,17 @@
 package ca.mjsanchez.ordersystem;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +25,31 @@ import com.google.gson.Gson;
 
 @RestController
 public class OrderController {
+
+    List<String> allOrders;
+
+    public OrderController() {
+        allOrders = new ArrayList<>();
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "order-events-consumer");
+        props.put("key.deserializer", StringDeserializer.class.getName());
+        props.put("value.deserializer", StringDeserializer.class.getName());
+        props.put("auto.offset.rest", "earliest");
+
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Arrays.asList("order-events"));
+
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+
+        for (ConsumerRecord<String, String> record : records) {
+            allOrders.add(record.value());
+        }
+
+        consumer.close();
+
+    }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/orderReceived")
@@ -126,6 +159,34 @@ public class OrderController {
         producer.close();
 
         return orderCreatedEvent;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/viewOrdersPlaced")
+    public ResponseEntity<String> viewOrders() {
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "order-events-consumer");
+        props.put("key.deserializer", StringDeserializer.class.getName());
+        props.put("value.deserializer", StringDeserializer.class.getName());
+        props.put("auto.offset.rest", "earliest");
+
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Arrays.asList("order-events"));
+
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+
+        for (ConsumerRecord<String, String> record : records) {
+            allOrders.add(record.value());
+        }
+
+        consumer.close();
+
+        Gson gson = new Gson();
+
+        return ResponseEntity.ok(gson.toJson(allOrders));
+
     }
 
 }
