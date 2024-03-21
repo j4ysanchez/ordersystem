@@ -131,11 +131,12 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/"></Route>
+          <Route path="/" element={<OrderForm />}></Route>
+          <Route path="/orders" element={<Orders />} />
         </Routes>
-        <div>
+        {/* <div>
           <OrderForm handleOrder={handleOrder} />
-        </div>
+        </div> */}
         <OrderReceivedModal
           isModalVisible={isModalVisible}
           handleOk={handleOk}
