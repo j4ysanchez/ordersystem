@@ -28,34 +28,47 @@ import com.google.gson.Gson;
 public class OrderController {
 
     List<String> allOrders;
+    String uuid;
+    private KafkaConsumer<String, String> consumer;
+
 
     public OrderController() {
         allOrders = new ArrayList<>();
+        uuid = UUID.randomUUID().toString();
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
-        props.put("group.id", "order-events-consumer");
+        props.put("group.id", uuid);
         props.put("key.deserializer", StringDeserializer.class.getName());
         props.put("value.deserializer", StringDeserializer.class.getName());
-        props.put("auto.offset.rest", "earliest");
+        props.put("auto.offset.reset", "earliest");
 
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        // KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList("order-events"));
 
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+        // ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
 
-        for (ConsumerRecord<String, String> record : records) {
-            allOrders.add(record.value());
-        }
+        // for (ConsumerRecord<String, String> record : records) {
+        //     allOrders.add(record.value());
+        // }
 
-        consumer.close();
+        // consumer.close();
+        new Thread(() -> {
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                for (ConsumerRecord<String, String> record : records) {
+                    allOrders.add(record.value());
+                }
+            }
+        }).start();
 
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/orderReceived")
     public ResponseEntity<String> orderReceived(@RequestBody Order order) {
-        String customer = order.getCustomer();
+        String customer = order.getName();
         String pizzaType = order.getPizzaType();
         String size = order.getSize();
         String address = order.getAddress();
@@ -166,25 +179,24 @@ public class OrderController {
     @GetMapping("/viewOrdersPlaced")
     public ResponseEntity<String> viewOrders() {
 
-        String uuid = UUID.randomUUID().toString();
 
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("group.id", "order-events-consumer");
-        props.put("key.deserializer", StringDeserializer.class.getName());
-        props.put("value.deserializer", StringDeserializer.class.getName());
-        props.put("auto.offset.reset", "earliest");
+        // Properties props = new Properties();
+        // props.put("bootstrap.servers", "localhost:9092");
+        // props.put("group.id", uuid);
+        // props.put("key.deserializer", StringDeserializer.class.getName());
+        // props.put("value.deserializer", StringDeserializer.class.getName());
+        // props.put("auto.offset.reset", "earliest");
 
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("order-events"));
+        // KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        // consumer.subscribe(Arrays.asList("order-events"));
 
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
+        // ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
 
-        for (ConsumerRecord<String, String> record : records) {
-            allOrders.add(record.value());
-        }
+        // for (ConsumerRecord<String, String> record : records) {
+        //     allOrders.add(record.value());
+        // }
 
-        consumer.close();
+        // consumer.close();
 
         Gson gson = new Gson();
 

@@ -1,3 +1,5 @@
+package ca.mjsanchez.ordersystem;
+
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;

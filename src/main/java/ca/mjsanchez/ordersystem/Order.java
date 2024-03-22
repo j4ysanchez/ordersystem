@@ -1,17 +1,17 @@
 package ca.mjsanchez.ordersystem;
 
 public class Order {
-    private String customer;
+    private String name;
     private String pizzaType;
     private String size;
     private String address;
 
-    public String getCustomer() {
-        return customer;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPizzaType() {
