@@ -131,18 +131,18 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/" element={<OrderForm />}></Route>
+          <Route path="/" element={<OrderForm handleOrder={handleOrder}/>}></Route>
+          {/* <Route path="/"/> */}
           <Route path="/orders" element={<Orders />} />
         </Routes>
-        {/* <div>
-          <OrderForm handleOrder={handleOrder} />
-        </div> */}
-        <OrderReceivedModal
+        <div>        
+          <OrderReceivedModal
           isModalVisible={isModalVisible}
           handleOk={handleOk}
           handleCancel={handleCancel}
           orderData={orderData}
         />
+        </div>
 
         {showModal && (
           <div className="modal">
