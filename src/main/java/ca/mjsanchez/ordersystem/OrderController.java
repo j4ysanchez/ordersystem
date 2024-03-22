@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -165,17 +166,19 @@ public class OrderController {
     @GetMapping("/viewOrdersPlaced")
     public ResponseEntity<String> viewOrders() {
 
+        String uuid = UUID.randomUUID().toString();
+
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "order-events-consumer");
         props.put("key.deserializer", StringDeserializer.class.getName());
         props.put("value.deserializer", StringDeserializer.class.getName());
-        props.put("auto.offset.rest", "earliest");
+        props.put("auto.offset.reset", "earliest");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList("order-events"));
 
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
 
         for (ConsumerRecord<String, String> record : records) {
             allOrders.add(record.value());
