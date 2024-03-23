@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import OrderReceivedModal from "./OrderReceivedModal";
 import PizzaToppingsDropdown from "./PizzaToppings";
 import OrderForm from "./OrderForm";
+import AllOrders from "./pages/admin/AllOrders";
 // import { PizzaSizeDropdown } from './PizzaSizes';
 
 // export function PizzaSizeDropdown(v) {
@@ -40,14 +41,6 @@ function Home() {
   return (
     <div>
       <h1>Home</h1>
-    </div>
-  );
-}
-
-function Orders() {
-  return (
-    <div>
-      <h1>Orders</h1>
     </div>
   );
 }
@@ -132,8 +125,8 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<OrderForm handleOrder={handleOrder}/>}></Route>
-          {/* <Route path="/"/> */}
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders" element={<AllOrders />} />
+          
         </Routes>
         <div>        
           <OrderReceivedModal
