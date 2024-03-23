@@ -103,6 +103,7 @@ public class OrderController {
     }
 
     @GetMapping("/hello-event")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void sendHelloEvent(@RequestParam String id) {
 
         String template = "{ \"orderid\":\"%s\", \"data\":\"hello%s\"}";
@@ -142,6 +143,7 @@ public class OrderController {
     }
 
     @GetMapping("/orderReceived")
+    @CrossOrigin(origins = "http://localhost:3000")
     public OrderCreatedEvent orderReceived(
             @RequestParam(name = "customer", defaultValue = "John Doe") String customer,
             @RequestParam(name = "pizzaType", defaultValue = "Pepperoni") String pizzaType,

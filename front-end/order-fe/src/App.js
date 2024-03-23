@@ -59,15 +59,15 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const socket = io("ws://localhost:8080/order-completed"); // replace with your server URL
-    socket.on("order-completed", () => {
-      setShowModal(true);
-    });
+  // useEffect(() => {
+  //   const socket = io("ws://localhost:8080/order-completed"); // replace with your server URL
+  //   socket.on("order-completed", () => {
+  //     setShowModal(true);
+  //   });
 
-    // Clean up the effect
-    return () => socket.disconnect();
-  }, []);
+  //   // Clean up the effect
+  //   return () => socket.disconnect();
+  // }, []);
 
   const handleOrder = (values) => {
     const url = "http://localhost:8080/orderReceived";
