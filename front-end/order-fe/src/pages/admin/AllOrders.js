@@ -58,6 +58,9 @@ function AllOrders() {
       title: 'Pizza Type',
       dataIndex: 'pizzaType',
       key: 'pizzaType',
+      sorter:(a, b) => {
+          return StringComparator(a.pizzaType, b.pizzaType);
+      },  
     },
     {
       title: 'Size',
