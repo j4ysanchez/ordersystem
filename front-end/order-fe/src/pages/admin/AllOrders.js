@@ -66,6 +66,9 @@ function AllOrders() {
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
+      sorter:(a, b) => {
+        return StringComparator(a.size, b.size);
+      }
     },
     {
       title: 'Address',
