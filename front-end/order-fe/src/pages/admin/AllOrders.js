@@ -88,31 +88,6 @@ function AllOrders() {
   return (
     <div>
       <h1>All Orders</h1>
-
-      {
-        mydata.map((order, index) => (
-          <tr key={index}>
-            <td>{order.id}</td>
-            <td>{order.customer}</td>
-            <td>{order.pizzaType}</td>
-            <td>{order.size}</td>
-            <td>{order.address}</td>
-            <td>{order.timestamp}</td>
-          </tr>
-        ))
-      }
-      {
-        orderJsonList.map((order, index) => (
-          <tr key={index}>
-            <td>{order.id}</td>
-            <td>{order.customer}</td>
-            <td>{order.pizzaType}</td>
-            <td>{order.size}</td>
-            <td>{order.address}</td>
-            <td>{new Date(Number(order.timestamp)).toLocaleString()}</td>
-          </tr>
-        ))
-      }
       <Table dataSource={orderJsonList} columns={columns} />
 
     </div>
