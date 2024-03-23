@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @RestController
 public class OrderController {
@@ -200,7 +201,18 @@ public class OrderController {
 
         // consumer.close();
 
+
         Gson gson = new Gson();
+
+        allOrders.sort((jsonString1, jsonString2) -> {
+            JsonObject jsonObject1 = gson.fromJson(jsonString1, JsonObject.class);
+            JsonObject jsonObject2 = gson.fromJson(jsonString2, JsonObject.class);
+        
+            String timestamp1 = jsonObject1.get("timestamp").getAsString();
+            String timestamp2 = jsonObject2.get("timestamp").getAsString();
+        
+            return timestamp2.compareTo(timestamp1);
+        });
 
         return ResponseEntity.ok(gson.toJson(allOrders));
 
