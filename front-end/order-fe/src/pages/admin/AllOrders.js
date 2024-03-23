@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "antd";
 
+function StringComparator(a, b) {
+  if (a === null || a === undefined) return -1;
+  if (b === null || b === undefined) return 1;
+
+  return a.localeCompare(b);
+  
+}
+
 function AllOrders() {
 
   //   const data = [
@@ -35,11 +43,16 @@ function AllOrders() {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter:(a, b) => a.id - b.id,
+      sortDirections:[  'descend', 'ascend']
     },
     {
       title: 'Customer',
       dataIndex: 'customer',
       key: 'customer',
+      sorter:(a, b) => {
+          return StringComparator(a.customer, b.customer);
+      },
     },
     {
       title: 'Pizza Type',
@@ -60,6 +73,8 @@ function AllOrders() {
       title: 'Timestamp',
       dataIndex: 'timestamp',
       key: 'timestamp',
+      sorter:(a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+      sortDirections:[  'descend', 'ascend']
     },
   ];
 
