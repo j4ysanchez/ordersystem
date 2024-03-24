@@ -74,7 +74,7 @@ public class OrderController {
         String size = order.getSize();
         String address = order.getAddress();
 
-        System.out.println("POST Order received: " + customer + " " + pizzaType + " " + size);
+        System.out.println("***POST Order received: " + customer + " " + pizzaType + " " + size);
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");

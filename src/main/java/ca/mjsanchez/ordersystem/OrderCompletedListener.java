@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.protocol.types.Field.Str;
@@ -16,6 +19,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
@@ -45,13 +49,42 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class OrderCompletedListener {
 
+    private KafkaStreams streams;
+    private final Topology topology;
+
     @CrossOrigin(origins = "http://localhost:3000")
     @MessageMapping("/order-completed")
     @SendTo("/topic/order-completed")
     public String orderCompleted(String message) throws Exception {
         return message;
     }
+    @Autowired
+    public OrderCompletedListener(Topology topology) {
+        this.topology = topology;
+    }
 
+    // @PostConstruct
+    // public void start() {
+    //     Properties config = new Properties();
+    //     config.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-completed-listener");
+    //     config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    //     config.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    //     config.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    //     config.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    //     config.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");   
+    //     config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+    //     streams = new KafkaStreams(topology, config);
+    //     streams.start();
+
+    //     // KStream<String, String> orderEvents = streams.stream("order-completed-events");
+    // }
+
+    // @PreDestroy
+    // public void stop() {
+    //     streams.close();
+    // }
+    
     // private final SimpMessagingTemplate template;
 
     // public OrderCompletedListener(SimpMessagingTemplate template) {
