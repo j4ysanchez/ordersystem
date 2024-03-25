@@ -59,7 +59,7 @@ public class OrderListener {
 
         System.out.println("**** OrderListener start() called ****");
         Properties config = new Properties();
-        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-listener");
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-listener" + System.currentTimeMillis());
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -67,13 +67,20 @@ public class OrderListener {
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
 
-        KStream<String, String> orderEvents = streamsBuilder.stream("order-events");
-        orderEvents.foreach((key, value) -> {
-            System.out.println("*** Event detected: Key: " + key + " Value: " + value);
-        });
+        // KStream<String, String> orderEvents = streamsBuilder.stream("order-events");
+        // orderEvents.foreach((key, value) -> {
+        //     System.out.println("*** Event detected: Key: " + key + " Value: " + value);
+        // });
         
 
-        orderEvents.print(Printed.<String, String>toSysOut().withLabel("**Order Events"));
+        // orderEvents.print(Printed.<String, String>toSysOut().withLabel("**Order Events"));
+
+        KTable<String, String> orderEventsTable = streamsBuilder.table("order-events");
+
+        // You can now use the KTable for various operations, for example:
+        orderEventsTable.toStream().foreach((key, value) -> {
+            System.out.println("-*- Event detected in KTable: Key: " + key + " Value: " + value);
+        });
 
         streams = new KafkaStreams(streamsBuilder.build(), config);
         streams.start();
